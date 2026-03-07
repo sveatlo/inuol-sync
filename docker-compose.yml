@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  invoice-ninja-sync:
+    build: .
+    container_name: invoice-ninja-sync
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - APP_SERVER__HOST=0.0.0.0
+      - APP_SERVER__PORT=3000
+      - APP_INVOICE_NINJA__BASE_URL=https://invoices.example.com/api/v1
+      - APP_INVOICE_NINJA__API_TOKEN=your-token
+      - APP_UOL__BASE_URL=https://test.demo.uol.cz/api/v1
+      - APP_UOL__USERNAME=demo@ucetnictvi-on-line.cz
+      - APP_UOL__PASSWORD=3R1Cc_wzcSuq02Wsh1-uww
+      - APP_EMAIL__SMTP_HOST=smtp.example.com
+      - APP_EMAIL__SMTP_PORT=587
+      - APP_EMAIL__SMTP_USERNAME=user@example.com
+      - APP_EMAIL__SMTP_PASSWORD=secret
+      - APP_EMAIL__FROM="inuol-sync <noreply@example.com>"
+      - APP_EMAIL__TO="Admin <admin@example.com>"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

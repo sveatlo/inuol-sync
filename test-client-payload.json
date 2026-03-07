@@ -1,0 +1,18 @@
+{
+    "id": "JAPdRqbGyO",
+    "user_id": "VolejRejNm",
+    "name": "Test Company s.r.o.",
+    "address1": "Příkop 834/4",
+    "address2": "",
+    "city": "Brno",
+    "state": "",
+    "postal_code": "60200",
+    "country_id": "203",
+    "phone": "+420123456789",
+    "vat_number": "CZ03864227",
+    "id_number": "03864227",
+    "settings": {
+        "currency_id": "51",
+        "language_id": "2"
+    }
+}

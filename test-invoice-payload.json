@@ -1,0 +1,20 @@
+{
+    "id": "JAPdRqbGyO",
+    "user_id": "VolejRejNm",
+    "client_id": "z3YaOpbxql",
+    "number": "123456",
+    "line_items": [
+        {
+            "quantity": 2,
+            "cost": 1000.50,
+            "product_key": "Consultation",
+            "custom_value1": "konzultace"
+        }
+    ],
+    "client": {
+        "custom_value1": "test_company_sro",
+        "settings": {
+            "currency_id": "51"
+        }
+    }
+}
