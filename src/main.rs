@@ -16,7 +16,7 @@ use crate::uol_client::UolClient;
 use anyhow::Result;
 use std::sync::Arc;
 use tracing::debug;
-use tracing::{info, level_filters::LevelFilter};
+use tracing::{error, info, level_filters::LevelFilter};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
 #[tokio::main]
@@ -45,6 +45,23 @@ async fn main() -> Result<()> {
     let invoice_ninja_client = InvoiceNinjaClient::new(config.invoice_ninja.clone());
     let email_notifier =
         EmailNotifier::new(&config.email).expect("Failed to initialize email notifier");
+
+    info!("Validating API credentials");
+    match tokio::try_join!(
+        async { uol_client.ping().await.map_err(anyhow::Error::from) },
+        async {
+            invoice_ninja_client
+                .ping()
+                .await
+                .map_err(anyhow::Error::from)
+        }
+    ) {
+        Ok(_) => info!("API credentials validated successfully"),
+        Err(e) => {
+            error!(error = %e, "API credential validation failed — check your config");
+            std::process::exit(1);
+        }
+    }
 
     let sync_service = SyncService::new(uol_client, invoice_ninja_client, email_notifier);
 

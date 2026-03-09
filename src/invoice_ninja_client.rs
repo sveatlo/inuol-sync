@@ -60,6 +60,23 @@ impl InvoiceNinjaClient {
         }
     }
 
+    pub async fn ping(&self) -> Result<(), InvoiceNinjaError> {
+        let url = format!("{}/ping", self.config.base_url);
+        let response = self
+            .client
+            .get(&url)
+            .header("X-API-TOKEN", &self.config.api_token)
+            .send()
+            .await?;
+        if response.status().is_success() {
+            Ok(())
+        } else {
+            let status = response.status();
+            let body = response.text().await.unwrap_or_default();
+            Err(InvoiceNinjaError::Api { status, body })
+        }
+    }
+
     pub async fn update_invoice_number(
         &self,
         invoice_id: &str,

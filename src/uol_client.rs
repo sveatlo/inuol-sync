@@ -53,6 +53,23 @@ impl UolClient {
         }
     }
 
+    pub async fn ping(&self) -> Result<(), UolError> {
+        let url = format!("{}/ping", self.config.base_url);
+        let response = self
+            .client
+            .get(&url)
+            .basic_auth(&self.config.username, Some(&self.config.password))
+            .send()
+            .await?;
+        if response.status().is_success() {
+            Ok(())
+        } else {
+            let status = response.status();
+            let body = response.text().await.unwrap_or_default();
+            Err(UolError::Api { status, body })
+        }
+    }
+
     pub async fn create_invoice(&self, invoice: UolInvoice) -> Result<String, UolError> {
         let url = format!("{}/sales_invoices", self.config.base_url);
 
