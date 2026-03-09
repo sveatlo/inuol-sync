@@ -1,5 +1,5 @@
 # Build stage
-FROM rust:1.94-slim as builder
+FROM rust:1.94-bullseye as builder
 
 WORKDIR /app
 
@@ -25,15 +25,13 @@ COPY src ./src
 RUN touch src/main.rs && cargo build --release
 
 # Runtime stage
-FROM debian:bookworm-slim
+FROM debian:bullseye-slim
 
 WORKDIR /app
 
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y \
-    ca-certificates \
-    libssl3 \
-    && rm -rf /var/lib/apt/lists/*
+    ca-certificates
 
 # Copy binary from builder
 COPY --from=builder /app/target/release/inuol-sync /usr/local/bin/inuol-sync
